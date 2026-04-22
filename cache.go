@@ -112,7 +112,9 @@ func setCacheEntry(cache *fastcache.Cache[string, cacheEntry], entry cacheEntry,
 			continue
 		}
 
-		cache.Set(key, entry)
+		if err := cache.Set(key, entry); err != nil {
+			return err
+		}
 	}
 
 	if !cachePersistent || cacheFilePath == "" {
@@ -130,6 +132,12 @@ func setCacheEntry(cache *fastcache.Cache[string, cacheEntry], entry cacheEntry,
 	}
 
 	return nil
+}
+
+func refreshCacheEntry(cache *fastcache.Cache[string, cacheEntry], entry cacheEntry, keys ...string) {
+	if err := setCacheEntry(cache, entry, keys...); err != nil {
+		return
+	}
 }
 
 func uniqKeys(keys ...string) []string {

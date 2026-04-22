@@ -466,9 +466,9 @@ func (m *model) scrollViewportToLine(line int) {
 	bottomLine := topLine + m.viewport.Height - 1 // -1 because it's zero-based index
 	for line < topLine || line > bottomLine {
 		if line < topLine {
-			m.viewport.ViewUp()
+			m.viewport.PageUp()
 		} else {
-			m.viewport.ViewDown()
+			m.viewport.PageDown()
 		}
 		// Update topLine and bottomLine after scrolling
 		topLine = m.viewport.YOffset

@@ -39,8 +39,8 @@ func TestGodocContextDefaults(t *testing.T) {
 	})
 
 	t.Run("WithContext nil uses background", func(t *testing.T) {
-		//lint:ignore SA1012 verify nil context defaults to background
-		g := New(WithContext(nil))
+		nilContext := func() context.Context { return nil }
+		g := New(WithContext(nilContext()))
 		if g.context() != context.Background() {
 			t.Fatalf("expected context.Background for nil WithContext")
 		}
@@ -72,7 +72,9 @@ func TestGodocLoadFillsImportPathFromCache(t *testing.T) {
 	}
 
 	key := getCacheKey("fmt", getPkgVersion("fmt", ""), "Printf")
-	cache.Set(key, entry)
+	if err := setCacheEntry(cache, entry, key); err != nil {
+		t.Fatalf("unexpected cache set error: %v", err)
+	}
 
 	g := New()
 	res, err := g.Load("fmt", "Printf", "")

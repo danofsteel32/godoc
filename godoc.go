@@ -114,7 +114,7 @@ func (d *Godoc) getOrLoadPkg(importPath, version string) (PackageDoc, string, er
 			if entry.GoVersion == runtime.Version() || (entry.GoVersion == "" && expected == runtime.Version()) {
 				if entry.GoVersion == "" {
 					entry.GoVersion = runtime.Version()
-					cache.Set(key, entry)
+					refreshCacheEntry(cache, entry, key)
 				}
 				return *entry.Package, entry.Package.ImportPath, nil
 			}
@@ -164,7 +164,7 @@ func (d *Godoc) getOrLoadSymbol(importPath, sel, version string) (SymbolDoc, str
 			if entry.GoVersion == runtime.Version() || (entry.GoVersion == "" && expected == runtime.Version()) {
 				if entry.GoVersion == "" {
 					entry.GoVersion = runtime.Version()
-					cache.Set(key, entry)
+					refreshCacheEntry(cache, entry, key)
 				}
 				return *entry.Symbol, entry.Symbol.ImportPath, nil
 			}

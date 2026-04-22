@@ -8,6 +8,7 @@ import (
 	"go/token"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/charmbracelet/glamour"
@@ -166,8 +167,12 @@ func buildPkgMarkdown(pkgDoc godoc.PackageDoc) string {
 	var sb strings.Builder
 
 	// Package header
-	sb.WriteString(fmt.Sprintf("# package %s\n\n", pkgDoc.Name))
-	sb.WriteString(fmt.Sprintf("```\nimport %q\n```\n\n", pkgDoc.ImportPath))
+	sb.WriteString("# package ")
+	sb.WriteString(pkgDoc.Name)
+	sb.WriteString("\n\n")
+	sb.WriteString("```\nimport ")
+	sb.WriteString(strconv.Quote(pkgDoc.ImportPath))
+	sb.WriteString("\n```\n\n")
 
 	// Package documentation
 	if pkgDoc.DocText != "" {
@@ -180,7 +185,9 @@ func buildPkgMarkdown(pkgDoc godoc.PackageDoc) string {
 		sb.WriteString("# CONSTANTS\n\n")
 		for _, c := range pkgDoc.Consts {
 			for _, name := range c.Names {
-				sb.WriteString(fmt.Sprintf("## %s\n\n", name))
+				sb.WriteString("## ")
+				sb.WriteString(name)
+				sb.WriteString("\n\n")
 			}
 			if c.Doc != "" {
 				sb.WriteString(c.Doc)
@@ -194,7 +201,9 @@ func buildPkgMarkdown(pkgDoc godoc.PackageDoc) string {
 		sb.WriteString("# VARIABLES\n\n")
 		for _, v := range pkgDoc.Vars {
 			for _, name := range v.Names {
-				sb.WriteString(fmt.Sprintf("## %s\n\n", name))
+				sb.WriteString("## ")
+				sb.WriteString(name)
+				sb.WriteString("\n\n")
 			}
 			if v.Doc != "" {
 				sb.WriteString(v.Doc)
@@ -373,7 +382,9 @@ func buildSymbolMarkdown(sym godoc.SymbolDoc) string {
 	appendDoc := true
 
 	// Package header
-	sb.WriteString(fmt.Sprintf("```\n// import %q\n```\n\n", sym.ImportPath))
+	sb.WriteString("```\n// import ")
+	sb.WriteString(strconv.Quote(sym.ImportPath))
+	sb.WriteString("\n```\n\n")
 
 	if strings.EqualFold(sym.Kind, "type") && sym.TypeDoc != nil {
 		if decl := sym.Decl; decl != "" {
