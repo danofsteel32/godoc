@@ -59,7 +59,12 @@ func getCache() (*fastcache.Cache[string, cacheEntry], error) {
 				cacheFilePath = ""
 			}
 
-			cache = fastcache.New[string, cacheEntry](cacheMaxEntries)
+			cache, err = fastcache.New[string, cacheEntry](cacheMaxEntries)
+			if err != nil {
+				cacheInitErr = fmt.Errorf("could not initialize cache: %w", err)
+
+				return
+			}
 		}
 
 		globalCache = cache
@@ -188,7 +193,10 @@ func loadCacheFromFile(path string, maxEntries int) (_ *fastcache.Cache[string, 
 	}
 
 	if cache == nil {
-		cache = fastcache.New[string, cacheEntry](maxEntries)
+		cache, err = fastcache.New[string, cacheEntry](maxEntries)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return cache, nil

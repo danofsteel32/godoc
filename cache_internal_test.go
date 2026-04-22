@@ -108,10 +108,13 @@ func TestSetCacheEntryHandlesSaveError(t *testing.T) {
 	}
 	cacheFilePath = filepath.Join(roDir, "cache.gob")
 
-	cache := fastcache.New[string, cacheEntry](10)
+	cache, err := fastcache.New[string, cacheEntry](10)
+	if err != nil {
+		t.Fatalf("failed to create cache: %v", err)
+	}
 
 	entry := cacheEntry{cacheMetadata: cacheMetadata{GoVersion: runtime.Version()}}
-	err := setCacheEntry(cache, entry, "alpha")
+	err = setCacheEntry(cache, entry, "alpha")
 	if err == nil {
 		t.Fatalf("expected error when saving to readonly directory")
 	}
@@ -132,7 +135,10 @@ func TestSetCacheEntrySuccess(t *testing.T) {
 	cachePersistent = true
 	cacheFilePath = filepath.Join(t.TempDir(), "cache.gob")
 
-	cache := fastcache.New[string, cacheEntry](5)
+	cache, err := fastcache.New[string, cacheEntry](5)
+	if err != nil {
+		t.Fatalf("failed to create cache: %v", err)
+	}
 
 	entry := cacheEntry{cacheMetadata: cacheMetadata{GoVersion: runtime.Version()}}
 	if err := setCacheEntry(cache, entry, "alpha", "beta"); err != nil {
@@ -151,7 +157,10 @@ func TestSetCacheEntrySkipsPersistenceWhenDisabled(t *testing.T) {
 	cachePersistent = false
 	cacheFilePath = filepath.Join(t.TempDir(), "cache.gob")
 
-	cache := fastcache.New[string, cacheEntry](5)
+	cache, err := fastcache.New[string, cacheEntry](5)
+	if err != nil {
+		t.Fatalf("failed to create cache: %v", err)
+	}
 
 	entry := cacheEntry{cacheMetadata: cacheMetadata{GoVersion: runtime.Version()}}
 	if err := setCacheEntry(cache, entry, "alpha"); err != nil {

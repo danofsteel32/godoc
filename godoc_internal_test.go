@@ -39,7 +39,8 @@ func TestGodocContextDefaults(t *testing.T) {
 	})
 
 	t.Run("WithContext nil uses background", func(t *testing.T) {
-		g := New(WithContext(nil)) //nolint:staticcheck // verify nil context defaults to background
+		//lint:ignore SA1012 verify nil context defaults to background
+		g := New(WithContext(nil))
 		if g.context() != context.Background() {
 			t.Fatalf("expected context.Background for nil WithContext")
 		}

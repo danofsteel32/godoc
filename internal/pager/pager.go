@@ -241,7 +241,9 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 
 	if m.isSearching {
-		cmd = m.updateTextArea(msg)
+		if cmd = m.updateTextArea(msg); cmd != nil {
+			cmds = append(cmds, cmd)
+		}
 		m.setSize(m.width, m.height)
 		m.highlightMatches()
 	}
